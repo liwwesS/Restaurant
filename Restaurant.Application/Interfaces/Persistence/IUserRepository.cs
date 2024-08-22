@@ -1,9 +1,10 @@
 ﻿using Restaurant.Application.Contracts;
+using Restaurant.Domain.Entities;
 
 namespace Restaurant.Application.Interfaces.Persistence;
 
 public interface IUserRepository
 {
-    Task<RegistrationResponse> RegisterUserAsync(RegisterRequest registerRequest);
-    Task<LoginResponse> LoginUserAsync(LoginRequest loginRequest);
+    Task<ApplicationUser?> GetUserByEmailAsync(string email);
+    Task AddUserAsync(ApplicationUser user);
 }

@@ -10,7 +10,7 @@ using Restaurant.Infrastructure.Authentication;
 using Restaurant.Infrastructure.Persistence;
 using Restaurant.Infrastructure.Persistence.Repositories;
 
-namespace Restaurant.Infrastructure.DependencyInjection;
+namespace Restaurant.Infrastructure;
 
 public static class ServiceContainer
 {
@@ -18,8 +18,11 @@ public static class ServiceContainer
         IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("SqlServer");
-        
         services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+        
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddAuthentication(options =>
         {
@@ -38,8 +41,5 @@ public static class ServiceContainer
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"]!))
             };
         });
-
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-        services.AddScoped<IUserRepository, UserRepository>();
     }
 }

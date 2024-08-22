@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.Contracts;
-using Restaurant.Application.Interfaces.Persistence;
+using Restaurant.Application.Services.Authentication;
 
 namespace Restaurant.API.Controllers;
 
@@ -8,24 +8,35 @@ namespace Restaurant.API.Controllers;
 [ApiController]
 public class AuthenticationController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
-
-    public AuthenticationController(IUserRepository userRepository)
+    private readonly IAuthenticationService _authenticationService;
+    public AuthenticationController(IAuthenticationService authenticationService)
     {
-        _userRepository = userRepository;
+        _authenticationService = authenticationService;
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<LoginResponse>> Login(LoginRequest loginRequest)
+    public async Task<ActionResult<AuthenticationResponse>> Login(LoginRequest loginRequest)
     {
-        var result = await _userRepository.LoginUserAsync(loginRequest);
+        var result = await _authenticationService.LoginUserAsync(loginRequest);
+        
+        if (!result.Success)
+        {
+            return Unauthorized(result);
+        }
+        
         return Ok(result);
     }
     
     [HttpPost("register")]
-    public async Task<ActionResult<RegistrationResponse>> Register(RegisterRequest registerRequest)
+    public async Task<ActionResult<AuthenticationResponse>> Register(RegisterRequest registerRequest)
     {
-        var result = await _userRepository.RegisterUserAsync(registerRequest);
-        return Ok(result);
+        var result = await _authenticationService.RegisterUserAsync(registerRequest);
+        
+        if (!result.Success)
+        {
+            return BadRequest(result);
+        }
+        
+        return CreatedAtAction(nameof(Register), new { id = result.UserId }, result);
     }
 }

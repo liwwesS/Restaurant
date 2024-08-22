@@ -1,4 +1,5 @@
-using Restaurant.Infrastructure.DependencyInjection;
+using Restaurant.Application;
+using Restaurant.Infrastructure;
 
 namespace Restaurant.API;
 
@@ -8,8 +9,12 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         {
+            builder.Logging.AddConsole();
+            builder.Logging.AddDebug(); 
+            
             builder.Services.AddControllers();
             builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddApplication();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
         }
