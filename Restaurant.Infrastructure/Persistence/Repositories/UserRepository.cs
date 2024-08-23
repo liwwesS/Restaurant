@@ -4,23 +4,20 @@ using Restaurant.Domain.Entities;
 
 namespace Restaurant.Infrastructure.Persistence.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(ApplicationDbContext context) : IUserRepository
 {
-    private readonly ApplicationDbContext _context;
-
-    public UserRepository(ApplicationDbContext context)
+    public async Task<ApplicationUser?> GetByEmailAsync(string email)
     {
-        _context = context;
+        return await context.Users
+            .Where(u => u.Email == email)
+            .FirstOrDefaultAsync();
     }
 
-    public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
+    public async Task<Guid> CreateAsync(ApplicationUser user)
     {
-        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-    }
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
 
-    public async Task AddUserAsync(ApplicationUser user)
-    {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        return user.Id;
     }
 }

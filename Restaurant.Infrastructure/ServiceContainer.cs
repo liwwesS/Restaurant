@@ -6,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Restaurant.Application.Interfaces.Authentication;
 using Restaurant.Application.Interfaces.Persistence;
+using Restaurant.Application.Interfaces.Seeders;
 using Restaurant.Infrastructure.Authentication;
 using Restaurant.Infrastructure.Persistence;
 using Restaurant.Infrastructure.Persistence.Repositories;
+using Restaurant.Infrastructure.Seeders;
 
 namespace Restaurant.Infrastructure;
 
@@ -22,7 +24,11 @@ public static class ServiceContainer
         
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+        services.AddScoped<IMenuItemRepository, MenuItemRepository>();
+        services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
 
         services.AddAuthentication(options =>
         {

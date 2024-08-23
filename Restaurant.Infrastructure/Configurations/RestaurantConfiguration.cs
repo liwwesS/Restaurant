@@ -8,6 +8,8 @@ public class RestaurantConfiguration : IEntityTypeConfiguration<Restaurants>
 {
     public void Configure(EntityTypeBuilder<Restaurants> builder)
     {
+        builder.HasKey(r => r.Id);
+        
         builder
             .HasMany(r => r.MenuItems)
             .WithOne()

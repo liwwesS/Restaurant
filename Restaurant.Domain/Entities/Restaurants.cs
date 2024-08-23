@@ -2,8 +2,8 @@
 
 public class Restaurants
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
     public string Name { get; set; } = default!;
     public string Description { get; set; } = default!;
-    public List<MenuItem> MenuItems { get; set; } = [];
+    public ICollection<MenuItem> MenuItems { get; set; } = [];
 }
