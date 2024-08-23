@@ -46,6 +46,15 @@ public static class ServiceContainer
                 ValidAudience = configuration["JwtSettings:Audience"],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JwtSettings:Secret"]!))
             };
+
+            options.Events = new JwtBearerEvents()
+            {
+                OnMessageReceived = context =>
+                {
+                    context.Token = context.Request.Cookies["super-cookies"];
+                    return Task.CompletedTask;
+                }
+            };
         });
     }
 }

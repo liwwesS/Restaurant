@@ -28,8 +28,12 @@ var app = builder.Build();
     await seeder.Seed();
 
     app.UseSerilogRequestLogging();
+    
     app.UseHttpsRedirection();
+    
     app.UseAuthentication();
+    app.UseAuthorization();
+    
     app.MapControllers();
     app.Run();
 }

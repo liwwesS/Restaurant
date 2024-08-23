@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Restaurant.Application.Contracts;
 using Restaurant.Application.Interfaces.Services;
 
 namespace Restaurant.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class RestaurantController(IRestaurantsService restaurantsService) : ControllerBase
@@ -50,6 +52,8 @@ public class RestaurantController(IRestaurantsService restaurantsService) : Cont
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> DeleteRestaurant(Guid id)
     {
-        return Ok(await restaurantsService.DeleteRestaurant(id));
+        var restaurantId = await restaurantsService.DeleteRestaurant(id);
+        
+        return Ok(restaurantId);
     }
 }
