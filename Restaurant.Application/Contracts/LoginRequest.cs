@@ -2,7 +2,7 @@
 
 namespace Restaurant.Application.Contracts;
 
-public class LoginRequest
+public record LoginRequest
 {
     [Required, EmailAddress]
     public string Email { get; set; } = string.Empty;

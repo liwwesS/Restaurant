@@ -1,7 +1,6 @@
 ﻿namespace Restaurant.Application.Contracts;
 
-public class RestaurantRequest
-{
-    public string Name { get; set; } = default!;
-    public string Description { get; set; } = default!;
-}
+public record RestaurantRequest(
+    string Name = default!,
+    string Description  = default!
+    );

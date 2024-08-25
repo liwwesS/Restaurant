@@ -12,11 +12,6 @@ public class RestaurantsService(IRestaurantRepository restaurantRepository) : IR
         return await restaurantRepository.GetAllAsync();
     }
 
-    public async Task<List<Restaurants>> GetAllRestaurantsWithMenu()
-    {
-        return await restaurantRepository.GetAllWithMenuAsync();
-    }
-
     public async Task<Restaurants?> GetRestaurantById(Guid id)
     {
         return await restaurantRepository.GetByIdAsync(id);

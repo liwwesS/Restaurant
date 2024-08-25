@@ -38,12 +38,16 @@ public class RestaurantController(IRestaurantsService restaurantsService) : Cont
     {
         var restaurantId = await restaurantsService.CreateRestaurant(restaurantRequest);
 
-        return Ok(restaurantId);
+        return CreatedAtAction(nameof(GetRestaurantById), new { id = restaurantId }, restaurantId);
     }
     
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<Guid>> UpdateRestaurant(Guid id, [FromBody] RestaurantRequest restaurantRequest)
     {
+        var restaurant = await restaurantsService.GetRestaurantById(id);
+        if (restaurant == null)
+            return NotFound();
+        
         var restaurantId = await restaurantsService.UpdateRestaurant(id, restaurantRequest);
 
         return Ok(restaurantId);
@@ -52,6 +56,10 @@ public class RestaurantController(IRestaurantsService restaurantsService) : Cont
     [HttpDelete("{id:guid}")]
     public async Task<ActionResult<Guid>> DeleteRestaurant(Guid id)
     {
+        var restaurant = await restaurantsService.GetRestaurantById(id);
+        if (restaurant == null)
+            return NotFound();
+        
         var restaurantId = await restaurantsService.DeleteRestaurant(id);
         
         return Ok(restaurantId);

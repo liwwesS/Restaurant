@@ -1,4 +1,5 @@
-﻿using Restaurant.Application.Interfaces.Persistence;
+﻿using Restaurant.Application.Contracts;
+using Restaurant.Application.Interfaces.Persistence;
 using Restaurant.Application.Interfaces.Services;
 using Restaurant.Domain.Entities;
 
@@ -16,14 +17,36 @@ public class MenuItemsService(IMenuItemRepository menuItemRepository) : IMenuIte
         return await menuItemRepository.GetByIdAsync(id);
     }
 
-    public async Task<Guid> CreateMenuItem(MenuItem item)
+    public async Task<Guid> CreateMenuItem(MenuItemRequest request)
     {
-        return await menuItemRepository.CreateAsync(item);
+        var menuItem = new MenuItem()
+        {
+            RestaurantId = request.RestaurantId,
+            Name = request.Name,
+            Price = request.Price,
+            Category = request.Category,
+        };
+        
+        return await menuItemRepository.CreateAsync(menuItem);
     }
 
-    public async Task<Guid> UpdateMenuItem(MenuItem item)
+    public async Task<Guid> UpdateMenuItem(Guid id, MenuItemRequest request)
     {
-        return await menuItemRepository.UpdateAsync(item);
+        var existingMenuItem = await menuItemRepository.GetByIdAsync(id);
+        
+        if (existingMenuItem == null)
+        {
+            throw new KeyNotFoundException($"MenuItem with id {id} not found");
+        }
+        
+        existingMenuItem.Name = request.Name;
+        existingMenuItem.Category = request.Category;
+        existingMenuItem.Price = request.Price;
+        existingMenuItem.RestaurantId = request.RestaurantId;
+        
+        await menuItemRepository.UpdateAsync(existingMenuItem);
+        
+        return id;
     }
 
     public async Task<Guid> DeleteMenuItem(Guid id)

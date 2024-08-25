@@ -11,13 +11,6 @@ public class RestaurantRepository(ApplicationDbContext context) : IRestaurantRep
         return await context.Restaurants.ToListAsync();
     }
     
-    public async Task<List<Restaurants>> GetAllWithMenuAsync()
-    {
-        return await context.Restaurants
-            .Include(r => r.MenuItems)
-            .ToListAsync();
-    }
-
     public async Task<Restaurants?> GetByIdAsync(Guid id)
     {
         return await context.Restaurants

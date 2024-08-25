@@ -2,7 +2,7 @@
 
 namespace Restaurant.Application.Contracts;
 
-public class RegisterRequest
+public record RegisterRequest
 {
     [Required]
     public string Name { get; set; } = string.Empty;
