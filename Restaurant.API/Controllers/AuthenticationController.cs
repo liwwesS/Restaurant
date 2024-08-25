@@ -43,4 +43,12 @@ public class AuthenticationController(IAuthenticationService authenticationServi
 
         return Ok(result);
     }
+    
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("super-cookies");
+
+        return NoContent();
+    }
 }
